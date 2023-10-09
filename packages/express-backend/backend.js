@@ -53,7 +53,7 @@ const addUser = (user) => {
     const newUser = {
         id: generateRandomId(),
         name: user.name,
-        job: user.job
+        job: user.job,
     }
     users['users_list'].push(newUser);
     return user;
@@ -62,8 +62,9 @@ const addUser = (user) => {
 const deleteUserById = (id) => {
     const index = users['users_list'].findIndex((user) => user['id'] === id);
     if (index !== -1) {
-        users['users_list'].filter((user) => user['id'] !== id);
+        users["users_list"] = users["users_list"].filter((user, i) => i !== index);
     }
+    return index
 }
 
 // Reference used: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript/15530287
@@ -102,7 +103,7 @@ app.get('/users', (req, res) => {
 });
     
 app.get('/users/:id', (req, res) => {
-    const id = req.params['id']; //or req.params.id
+    const id = req.params['id'];
     let result = findUserById(id);
     if (result === undefined) {
         res.status(404).send('Resource not found.');
@@ -118,10 +119,15 @@ app.post('/users', (req, res) => {
 });
 
 app.delete('/users/:id', (req, res) => {
-    const id = req.params['id'];
-    deleteUserById(id);
-    res.send();
-});
+    const id = req.params.id;
+    const deletedUser = deleteUserById(id);
+  
+    if (deletedUser !== -1) {
+        res.status(204).send();
+    } else {
+        res.status(404).send('Resource not found.');
+    }
+  });
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
