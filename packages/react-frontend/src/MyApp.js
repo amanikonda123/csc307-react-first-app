@@ -27,7 +27,9 @@ function MyApp() {
         }
       })
       .then((newUser) => {
-        setCharacters([...characters, newUser]);
+        console.log('New User:', newUser);
+        setCharacters((prevCharacters) => [...prevCharacters, newUser]);
+        console.log('Updated Characters:', characters);
       })
       .catch((error) => {
         console.log(error);
