@@ -50,7 +50,12 @@ const findUserByJob = (job) =>
         .find( (user) => user['job'] === job);
 
 const addUser = (user) => {
-    users['users_list'].push(user);
+    const newUser = {
+        id: generateRandomId(),
+        name: user.name,
+        job: user.job
+    }
+    users['users_list'].push(newUser);
     return user;
 }
 
@@ -60,6 +65,16 @@ const deleteUserById = (id) => {
         users['users_list'].filter((user) => user['id'] !== id);
     }
 }
+
+// Reference used: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript/15530287
+const generateRandomId = () => {
+    const letters = 'abcdefghijklmnopqrstuvwxyz';
+    const digits = '0123456789';
+  
+    const randomLetter = () => letters.charAt(Math.floor(Math.random() * letters.length));
+    const randomDigit = () => digits.charAt(Math.floor(Math.random() * digits.length));
+    return randomLetter() + randomLetter() + randomLetter() + randomDigit() + randomDigit() + randomDigit();
+  };
         
 app.get('/', (req, res) => {
     res.send('Hello World!');
@@ -98,8 +113,8 @@ app.get('/users/:id', (req, res) => {
 
 app.post('/users', (req, res) => {
     const userToAdd = req.body;
-    addUser(userToAdd);
-    res.send();
+    const newUser = addUser(userToAdd);
+    res.status(201).send(newUser);
 });
 
 app.delete('/users/:id', (req, res) => {

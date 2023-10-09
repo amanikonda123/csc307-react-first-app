@@ -17,12 +17,21 @@ function MyApp() {
     return promise;
   }
 
-  function updateList(person) { 
+  function updateList(person) {
     postUser(person)
-      .then(() => setCharacters([...characters, person]))
+      .then((res) => {
+        if (res.status === 201) {
+          return res.json();
+        } else {
+          throw new Error('User data could not be parsed as JSON');
+        }
+      })
+      .then((newUser) => {
+        setCharacters([...characters, newUser]);
+      })
       .catch((error) => {
         console.log(error);
-      })
+      });
   }
   
   function postUser(person) {
@@ -42,10 +51,6 @@ function MyApp() {
         return i !== index
     });
     setCharacters(updated);
-  }
-
-  function updateList(person) {
-    setCharacters([...characters, person]);
   }
 
   return (
