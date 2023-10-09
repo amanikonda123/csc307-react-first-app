@@ -11,5 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "create-react-app": "^5.0.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
